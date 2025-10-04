@@ -21,11 +21,13 @@ export default function FlipCard({ flip, onUpdate }) {
   const handleMarkSold = async () => {
     const sellPriceInput = prompt("Enter sell price ($):");
     const sellDateInput = prompt("Enter sell date (YYYY-MM-DD):");
+    const fees = prompt("Fees:");
 
-    if (!sellPriceInput || !sellDateInput) return;
+    if (!sellPriceInput || !sellDateInput || !fees) return;
 
     const sellPrice = parseFloat(sellPriceInput);
     const sellDate = new Date(sellDateInput).toISOString().split("T")[0];
+    const finalFees = parseFloat(fees)
 
     console.log("Updating flip ID:", flip.id);
     console.log("Sell price:", sellPrice, "Sell date:", sellDate);
@@ -37,6 +39,7 @@ export default function FlipCard({ flip, onUpdate }) {
       .update({
         sell_price: sellPrice,
         sell_date: sellDate,
+        fees: finalFees,
       })
       .eq("id", flip.id);
 

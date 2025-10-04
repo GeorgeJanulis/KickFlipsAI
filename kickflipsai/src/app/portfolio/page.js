@@ -48,7 +48,7 @@ export default function Portfolio() {
                 <StatCard label="Total Profit" value={ `$${totalProfit.toFixed(2)}`} />
                 <StatCard label="Total Revenue" value={ `$${totalRevenue.toFixed(2)}`} />
                 <StatCard label="Avg. Profit" value={ `$${avgProfit.toFixed(2)}`} />
-                <StatCard label="Avg. Hold Time" value={ `$${avgHoldTime.toFixed(1)} days`} />
+                <StatCard label="Avg. Hold Time" value={ `${avgHoldTime.toFixed(1)} days`} />
                 <StatCard label="Inventory Value" value={ `$${investment.toFixed(2)}`} />
 
             </div>

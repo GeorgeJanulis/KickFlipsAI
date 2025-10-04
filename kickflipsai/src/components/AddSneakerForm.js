@@ -29,7 +29,6 @@ export default function AddSneakerForm({ onAdded }) {
                 purchase_price: parseFloat(form.purchase_price),
                 purchase_date: form.purchase_date,
                 condition: form.condition,
-                fees: parseFloat(form.fees) || 0,
             },
         ]);
 
@@ -43,7 +42,6 @@ export default function AddSneakerForm({ onAdded }) {
                 purchase_price: "",
                 purchase_date: "",
                 condition: "",
-                fees: "",
             });
             onAdded?.()
         }
@@ -89,14 +87,6 @@ export default function AddSneakerForm({ onAdded }) {
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
                 required
-            />
-            <input
-                name="fees"
-                type="number"
-                placeholder="Fees (optional)"
-                value={form.fees}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
             />
 
             <button
