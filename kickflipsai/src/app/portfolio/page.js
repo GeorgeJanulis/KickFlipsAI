@@ -1,56 +1,46 @@
+"use client";
+
 import FlipCard from '../../components/FlipCard';
-
-const mockFlips = [
-    {
-        sneakerName: "Jordan 1 High Chicago",
-        purchasePrice: 200,
-        sellPrice: 350,
-        fees: 25,
-        purchaseDate: "2025-10-01",
-        sellDate: "2025-10-04",
-        condition: "New",
-    },
-
-    {
-        sneakerName: "Jordan 4 Bred",
-        purchasePrice: 120,
-        sellPrice: 220,
-        fees: 19,
-        purchaseDate: "2025-09-28",
-        sellDate: "2025-10-02",
-        condition: "Used",
-    },
-
-    {
-        sneakerName: "Dunk Low Panda",
-        purchasePrice: 60,
-        sellPrice: null,
-        fees: null,
-        purchaseDate: "2025-09-28",
-        sellDate: null,
-        condition: "Used",
-    },
-];
+import AddSneakerForm from "@/components/AddSneakerForm";
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabaseClient'
 
 export default function Portfolio() {
 
-    const soldFlips = mockFlips.filter(flip => flip.sellDate);
-    const inventoryFlips = mockFlips.filter(flip => !flip.sellDate);
+    const [flips, setFlips] = useState([])
 
-    const totalProfit = soldFlips.reduce((sum, f) => sum + (f.sellPrice - f.purchasePrice - f.fees), 0);
-    const totalRevenue = soldFlips.reduce((sum, f) => sum + f.sellPrice, 0);
+        const fetchFlips = async () => {
+            const { data, error } = await supabase
+                .from('sneakers')
+                .select('*')
+                .order('purchase_date', { ascending: false})
+
+            if (error) console.error('Error fetching data', error)
+            else setFlips(data)
+        };
+
+    useEffect(() => {
+        fetchFlips()
+    }, [])
+
+    const soldFlips = flips.filter(f => f.sell_date);
+    const inventoryFlips = flips.filter(f => !f.sell_date);
+
+    const totalProfit = soldFlips.reduce((sum, f) => sum + (f.sell_price - f.purchase_price - f.fees), 0);
+    const totalRevenue = soldFlips.reduce((sum, f) => sum + f.sell_price, 0);
     const avgProfit = soldFlips.length ? totalProfit / soldFlips.length : 0;
     const avgHoldTime = soldFlips.length
         ? soldFlips.reduce((sum, f) => {
-            const holdTime = Math.ceil((new Date(f.sellDate) - new Date(f.purchaseDate)) / (1000*60*60*24));
+            const holdTime = Math.ceil((new Date(f.sell_date) - new Date(f.purchase_date)) / (1000*60*60*24));
             return sum + holdTime;
         }, 0) / soldFlips.length
         : 0;
-    const investment = inventoryFlips.reduce((sum, f) => sum + f.purchasePrice, 0);
+    const investment = inventoryFlips.reduce((sum, f) => sum + f.purchase_price, 0);
 
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">My Portfolio</h1>
+            <AddSneakerForm onAdded={fetchFlips} />
 
             {/* Summary */}
 
@@ -69,7 +59,7 @@ export default function Portfolio() {
                 {inventoryFlips.length > 0 ? (
                     <div className="grid grid-cols-1 sm: grid-cols-2 md:grid-cols-3: lg:grid-cols-4 gap-4">
                         {inventoryFlips.map((flip, idx) => (
-                            <FlipCard key={idx} flip={flip} />
+                            <FlipCard key={flip.id} flip={flip} onUpdate={fetchFlips}/>
                         ))}
                     </div>
                 ) : (
@@ -83,7 +73,7 @@ export default function Portfolio() {
                 {soldFlips.length > 0 ? (
                     <div className="grid grid-cols-1 sm: grid-cols-2 md:grid-cols-3: lg:grid-cols-4 gap-4">
                         {soldFlips.map((flip, idx) => (
-                            <FlipCard key={idx} flip={flip} />
+                            <FlipCard key={flip.id} flip={flip} onUpdate={fetchFlips}/>
                         ))}
                     </div>
                 ) : (
