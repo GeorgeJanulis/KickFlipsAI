@@ -77,8 +77,8 @@ export default function Portfolio() {
 
       {/* Portfolio Overview */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-          Portfolio Overview
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100 text-center">
+          Statistics
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           <StatCard

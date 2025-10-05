@@ -65,7 +65,7 @@ export default function AddSneakerForm({ onAdded }) {
             onSubmit={handleSubmit}
             className="big-white dark:bg-gray-800 p-4 rounded-lg shadow w-full max-w-md space-y-3"
         >
-            <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Add New Sneaker</h2>
+            <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Information</h2>
 
             <input
                 name="sneaker_name"
