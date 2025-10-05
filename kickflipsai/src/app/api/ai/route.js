@@ -7,7 +7,7 @@ export async function POST(req) {
     const body = await req.json();
     console.log("🧠 Request body:", body);
 
-    const { query } = body;
+    const { query, data: recentSalesData } = body;
     if (!query) {
       console.log("❌ Missing query");
       return new Response(
@@ -31,9 +31,17 @@ export async function POST(req) {
 
     console.log("🚀 Sending query to Gemini:", query);
     const result = await model.generateContent(
-      `Provide sneaker resale insights for: ${query}. I want a very brief summary formatted neatly seperated by new and used. 
-      I want each category to have information such as, average hold time, resale price, and a good price to buy and still make a decent roi`
-    );
+        `You are a sneaker trading assistant. 
+         I will provide you with data about recent sales for a specific sneaker. 
+         Only use this data to give a very concise summary (1-2 sentences) about: 
+         - average hold time
+         - whether this shoe is a good investment for a reseller?
+         - how much should I buy this shoe for to make a decent ROI based on these sales?
+         Do not add historical info or colorways. 
+         Make sure to distinguish between new and used
+         Here is the data: ${JSON.stringify(recentSalesData)}
+         Respond in plain text bullet format.`
+      );
 
     console.log("✅ Gemini result received");
     const text = result.response.text();

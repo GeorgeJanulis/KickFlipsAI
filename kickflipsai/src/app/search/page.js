@@ -58,18 +58,27 @@ export default function Search() {
     setAiLoading(true);
   
     try {
+      // Build the sales data first
+      const recentSalesData = filtered.map(flip => ({
+        sneaker_name: flip.sneaker_name,
+        purchase_price: flip.purchase_price,
+        sell_price: flip.sell_price,
+        condition: flip.condition,
+        hold_time_days: flip.sell_date 
+          ? Math.round((new Date(flip.sell_date) - new Date(flip.purchase_date)) / (1000*60*60*24)) 
+          : null
+      }));
+  
+      // Send to API
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: term }),
+        body: JSON.stringify({ query: term, data: recentSalesData }),
       });
   
-      // If res is empty or failed, throw an error
-      if (!res.ok) {
-        throw new Error("Failed to get AI response");
-      }
+      if (!res.ok) throw new Error("Failed to get AI response");
   
-      const data = await res.json(); // ✅ this only works if backend returns JSON
+      const data = await res.json();
       setAiResponse(data.text);
     } catch (err) {
       console.error("AI fetch error:", err);
@@ -85,6 +94,7 @@ export default function Search() {
       fetchAIResponse(search);
     }
   }, [search]);
+
 
   return (
     <div className="p-4">
