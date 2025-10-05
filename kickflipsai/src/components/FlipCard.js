@@ -84,6 +84,7 @@ export default function FlipCard({ flip, onUpdate }) {
       <div className="flex justify-between text-sm text-gray-500">
         <span>Condition: {flip.condition}</span>
         {flip.fees && <span className="italic">Fees: {flip.fees}</span>}
+        <span>Size: {flip.size || "-"}</span>
       </div>
 
       {!flip.sell_date && (

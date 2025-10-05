@@ -64,6 +64,7 @@ export default function Search() {
         purchase_price: flip.purchase_price,
         sell_price: flip.sell_price,
         condition: flip.condition,
+        size: flip.size,
         hold_time_days: flip.sell_date 
           ? Math.round((new Date(flip.sell_date) - new Date(flip.purchase_date)) / (1000*60*60*24)) 
           : null

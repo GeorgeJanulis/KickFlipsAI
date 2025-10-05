@@ -10,6 +10,7 @@ export default function AddSneakerForm({ onAdded }) {
         purchase_date: "",
         condition: "",
         fees: "",
+        size: "",
     });
 
     const [loading, setLoading] = useState(false);
@@ -38,6 +39,7 @@ export default function AddSneakerForm({ onAdded }) {
                 purchase_price: parseFloat(form.purchase_price),
                 purchase_date: form.purchase_date,
                 condition: form.condition,
+                size: form.size,
             },
         ]);
 
@@ -52,6 +54,7 @@ export default function AddSneakerForm({ onAdded }) {
                 purchase_price: "",
                 purchase_date: "",
                 condition: "",
+                size: "",
             });
             onAdded?.(); // refresh flips in parent
         }
@@ -94,6 +97,15 @@ export default function AddSneakerForm({ onAdded }) {
                 name="condition"
                 placeholder="e.g. New, Used"
                 value={form.condition}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
+                required
+            />
+            <input
+                name="size"
+                type="number"
+                placeholder="Size"
+                value={form.size}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
                 required

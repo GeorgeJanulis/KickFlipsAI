@@ -33,14 +33,15 @@ export async function POST(req) {
     const result = await model.generateContent(
         `You are a sneaker trading assistant. 
          I will provide you with data about recent sales for a specific sneaker. 
-         Only use this data to give a very concise summary (1-2 sentences) about: 
+         Only use this data to give a very concise summary (2-3 sentences) about: 
          - average hold time
          - whether this shoe is a good investment for a reseller?
          - how much should I buy this shoe for to make a decent ROI based on these sales?
+         - which sizes are worth more or less or do better than others
          Do not add historical info or colorways. 
          Make sure to distinguish between new and used
          Here is the data: ${JSON.stringify(recentSalesData)}
-         Respond in plain text bullet format.`
+         Respond in plain text.`
       );
 
     console.log("✅ Gemini result received");
