@@ -22,9 +22,18 @@ export default function AddSneakerForm({ onAdded }) {
         e.preventDefault();
         setLoading(true);
 
+        // Get the current logged-in session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+        if (sessionError || !session) {
+            alert("You must be logged in to add a sneaker.");
+            setLoading(false);
+            return;
+        }
+
         const { error } = await supabase.from("sneakers").insert([
             {
-                user_id: '00000000-0000-0000-0000-000000000001',
+                user_id: session.user.id, // <-- fixed
                 sneaker_name: form.sneaker_name,
                 purchase_price: parseFloat(form.purchase_price),
                 purchase_date: form.purchase_date,
@@ -34,16 +43,17 @@ export default function AddSneakerForm({ onAdded }) {
 
         setLoading(false);
 
-        if (error) alert("Error adding sneaker: " + error.message);
-        else{
-            alert("Sneaker added!")
+        if (error) {
+            alert("Error adding sneaker: " + error.message);
+        } else {
+            alert("Sneaker added!");
             setForm({
                 sneaker_name: "",
                 purchase_price: "",
                 purchase_date: "",
                 condition: "",
             });
-            onAdded?.()
+            onAdded?.(); // refresh flips in parent
         }
     };
 
@@ -52,14 +62,14 @@ export default function AddSneakerForm({ onAdded }) {
             onSubmit={handleSubmit}
             className="big-white dark:bg-gray-800 p-4 rounded-lg shadow w-full max-w-md space-y-3"
         >
-            <h2 className="text-xl font-semibold mb-2">Add New Sneaker</h2>
+            <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Add New Sneaker</h2>
 
             <input
                 name="sneaker_name"
                 placeholder="Sneaker name"
                 value={form.sneaker_name}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
                 required
             />
             <input
@@ -68,16 +78,16 @@ export default function AddSneakerForm({ onAdded }) {
                 placeholder="Purchase price"
                 value={form.purchase_price}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
                 required
             />
             <input
                 name="purchase_date"
                 type="date"
-                placeholder="date"
+                placeholder="Date"
                 value={form.purchase_date}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
                 required
             />
             <input
@@ -85,14 +95,14 @@ export default function AddSneakerForm({ onAdded }) {
                 placeholder="e.g. New, Used"
                 value={form.condition}
                 onChange={handleChange}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded"
                 required
             />
 
             <button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-600 text py-2 px-4 rounded w-full"
+                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
             >
                 {loading ? "Adding..." : "Add Sneaker"}
             </button>

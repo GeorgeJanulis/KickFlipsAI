@@ -10,10 +10,24 @@ export default function Portfolio() {
     const [flips, setFlips] = useState([])
 
         const fetchFlips = async () => {
+
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+            if (sessionError) {
+                console.error("Error getting session:", sessionError);
+                return;
+            }
+
+            if (!session) {
+                console.warn("No active session - user not logged in");
+                setFlips([]);
+                return;
+            }
             const { data, error } = await supabase
                 .from('sneakers')
                 .select('*')
-                .order('purchase_date', { ascending: false})
+                .eq('user_id', session.user.id)
+                .order('purchase_date', { ascending: false});
 
             if (error) console.error('Error fetching data', error)
             else setFlips(data)
